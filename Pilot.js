@@ -1,4 +1,4 @@
-import {BaseEntity} from "./BaseEntity";
+import {BaseEntity} from "./BaseEntity.js";
 
 export class Pilot extends BaseEntity {
     #rating = 1;
@@ -13,7 +13,9 @@ export class Pilot extends BaseEntity {
     }
 
     updateRating() {
-        this.#rating += 0.2;
+        if (this.#rating <= 4.8) {
+            this.#rating += 0.2;
+        }
     }
 
     introduceRating() {

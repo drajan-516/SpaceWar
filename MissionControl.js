@@ -8,13 +8,14 @@ export class MissionControl {
     static launchWithDisplay(mission, delayMs) {
         const boundLog = mission.logStatus.bind(mission, "[LUNCH]");
         console.log(`Mission has start with dilay ${delayMs}.`);
+        this.onMission(mission);
         setTimeout(() => {
             boundLog();
             this.runMission(mission);
         }, delayMs);
     }
 
-    static runMission(mission) {
+    static async runMission(mission) {
         if (!mission.ship.currentPilot) {
             console.log("No pilot found!");
             return;
@@ -22,41 +23,69 @@ export class MissionControl {
 
         const steps = [
             MissionControl._stepTakeOff,
-            MissionControl._stepFly,
             MissionControl._stepDeliver,
             MissionControl._stepReturn,
         ];
 
-        steps.forEach((fn, index) => {
-            fn.call(this, mission, index + 1);
-        });
+        for (let i = 0; i < steps.length; i++) {
+            await steps[i].call(this, mission, i + 1);
+        }
 
         mission.calcReward();
         mission.complete();
+        this.nonMission(mission);
     }
 
     static _stepTakeOff(mission, stepNumber) {
-        console.log(`Step ${stepNumber}: 
-        Our "${mission.ship.name} with pilot "${mission.ship.currentPilot} started!`);
-    }
+        return new Promise(resolve => {
+            const duration = 60000 - 30000 * (mission.ship.speed/100);
+            const ship = document.getElementById(`${mission.ship.name}`);
+            const shipPos = ship.getBoundingClientRect();
+            const targetPos = document.getElementById(`${mission.target}`).getBoundingClientRect();
 
-    static _stepFly(mission, stepNumber) {
-        console.log(`Step ${stepNumber}: 
-        Our "${mission.ship.name} flying with speed ${mission.ship.speed}!`);
+            const distanceX = targetPos.left - shipPos.left;
+            const distanceY = targetPos.top - shipPos.top;
+
+            ship.style.transition = `transform ${duration}ms linear`;
+            ship.style.transform = `translate(${distanceX}px, ${distanceY}px)`;
+
+            console.log(`Step ${stepNumber}:
+        Our "${mission.ship.name} with pilot "${mission.ship.currentPilot.name} started!`);
+            setTimeout(resolve, duration);
+        });
     }
 
     static _stepDeliver(mission, stepNumber) {
-        (function (m, s) {
-            console.log(`Step ${s}: Adding ${m.cargos.length} to receivers.`);
-        }).apply(null, [mission, stepNumber]);
+        return new Promise(resolve => {
+            (function (m, s) {
+                console.log(`Step ${s}: Adding ${m.cargos.length} to receivers.`);
+            }).apply(null, [mission, stepNumber]);
+
+            document.getElementById(`${mission.ship.name}`).style.transform = "translate(0px, 0px)";
+            setTimeout(resolve, 60000 - 30000 * (mission.ship.speed/100));
+        });
     }
 
     static _stepReturn(mission, stepNumber) {
         console.log(`Step ${stepNumber}: 
-        Our "${mission.ship.name} with pilot "${mission.ship.currentPilot} returned!`);
+        Our "${mission.ship.name} with pilot "${mission.ship.currentPilot.name} returned!`);
     }
 
     static genericLog(prefix) {
         console.log(`${prefix} ${this.displayName || this.name || "Something"} logging.`)
+    }
+
+    static onMission(mission) {
+        const shipOption = document.querySelector(`option[value="${mission.ship.name}"]`);
+        const pilotOption = document.querySelector(`option[value="${mission.ship.currentPilot.name}"]`);
+        shipOption.style.display = 'none';
+        pilotOption.style.display = 'none';
+    }
+
+    static nonMission(mission) {
+        const shipOption = document.querySelector(`option[value="${mission.ship.name}"]`);
+        const pilotOption = document.querySelector(`option[value="${mission.ship.currentPilot.name}"]`);
+        shipOption.style.display = 'block';
+        pilotOption.style.display = 'block';
     }
 }

@@ -1,4 +1,4 @@
-import {BaseEntity} from "./BaseEntity";
+import {BaseEntity} from "./BaseEntity.js";
 
 export class Ship extends BaseEntity {
     constructor(name, speed, capacity) {
@@ -10,7 +10,7 @@ export class Ship extends BaseEntity {
 
     assignPilot(pilot) {
         this.currentPilot = pilot;
-        console.log(`${this.displayName} is set to be captain of ship: ${this.name}.`)
+        console.log(`${this.currentPilot.name} is set to be captain of ship: ${this.name}.`)
     }
 
     info() {

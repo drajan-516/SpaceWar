@@ -1,10 +1,11 @@
-import {BaseEntity} from "./BaseEntity";
+import {BaseEntity} from "./BaseEntity.js";
 
 export class Mission extends BaseEntity {
-    constructor(name, ship) {
+    constructor(name, ship, target) {
         super(name);
         this.ship = ship;
         this.cargos = [];
+        this.target = target;
         this.isCompleted = false;
         this.reward = 0;
     }
@@ -47,7 +48,7 @@ export class Mission extends BaseEntity {
 
     logStatus(prefix = "") {
         console.log(`${prefix}Mission "${this.name}": ship = ${this.ship.name},
-        pilot - ${this.currentPilot ? this.currentPilot.displayName : "no pilot found"},
+        pilot - ${this.ship.currentPilot ? this.ship.currentPilot.name : "no pilot found"},
         cargos: ${this.cargos.length}, and received in total: ${this.reward}`);
     }
 }

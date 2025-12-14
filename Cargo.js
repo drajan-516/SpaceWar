@@ -1,4 +1,4 @@
-import { BaseEntity } from "./BaseEntity";
+import { BaseEntity } from "./BaseEntity.js";
 
 export class Cargo extends BaseEntity {
     constructor(name, weight, value) {
