@@ -1,4 +1,5 @@
 import {BaseEntity} from "./BaseEntity.js";
+import {MissionControl} from "./MissionControl.js";
 
 export class Mission extends BaseEntity {
     constructor(name, ship, target) {
@@ -8,12 +9,14 @@ export class Mission extends BaseEntity {
         this.target = target;
         this.isCompleted = false;
         this.reward = 0;
+        this.maxWeight = (Math.floor(Math.random()*(20 - 8)) + 8)*10;
     }
 
     addCargo(cargo) {
         const totalWeight = this.cargos.reduce((sum, c) => sum + c.weight, 0);
 
-        if (totalWeight + cargo.weight > this.ship.capacity) {
+        if (totalWeight + cargo.weight > this.ship.capacity || totalWeight + cargo.weight > this.maxWeight) {
+            MissionControl.genericLog.call(this, "[ERROR]");
             console.log("Too much!");
 
             return;
@@ -49,6 +52,6 @@ export class Mission extends BaseEntity {
     logStatus(prefix = "") {
         console.log(`${prefix}Mission "${this.name}": ship = ${this.ship.name},
         pilot - ${this.ship.currentPilot ? this.ship.currentPilot.name : "no pilot found"},
-        cargos: ${this.cargos.length}, and received in total: ${this.reward}`);
+        cargos: ${this.cargos.length}, and received in total: ${this.calcReward()}`);
     }
 }

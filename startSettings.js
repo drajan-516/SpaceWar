@@ -1,19 +1,19 @@
 import {Pilot} from "./Pilot.js";
 import {Ship} from "./Ship.js";
 import {Cargo} from "./Cargo.js";
-import {Mission} from "./Mission.js";
-import {MissionControl} from "./MissionControl.js";
+import {Smuggler} from "./Smuggler.js";
+import {Warrior} from "./Warrior.js";
 
 const Alex = new Pilot("Alex", 3);
 const Alina = new Pilot("Alina", 5);
 const Walt = new Pilot("Walt", 3);
 const Dan = new Pilot("Dan", 1);
-const Anya = new Pilot("Anya", 2);
-const Jessica = new Pilot("Jessica", 3);
-const Henry = new Pilot("Henry", 3);
-const William = new Pilot("William", 2);
-const Oliver = new Pilot("Oliver", 1);
-const James = new Pilot("James", 2);
+const Anya = new Smuggler("Anya", 2);
+const Jessica = new Smuggler("Jessica", 3);
+const Henry = new Warrior("Henry", 3);
+const William = new Warrior("William", 2);
+const Oliver = new Smuggler("Oliver", 1);
+const James = new Warrior("James", 2);
 
 Alex.introduceRating();
 Alina.introduceRating();
@@ -26,7 +26,7 @@ William.introduceRating();
 Oliver.introduceRating();
 James.introduceRating();
 
-const pilots = [Alex, Alina, Walt, Dan, Anya, Jessica, Henry, William, Oliver, James];
+export const pilots = [Alex, Alina, Walt, Dan, Anya, Jessica, Henry, William, Oliver, James];
 
 let companyRating = pilots.reduce((sum, pilot) => {return sum + pilot.rating}, 0)/pilots.length;
 console.log(companyRating);
@@ -47,33 +47,10 @@ const ironComet = new Ship("Iron Comet", 200, 0);
 export const ships = [quantumFalcon, celestialVanguard, voidrunner, horizonBreaker, auroraNova, starboundEclipse, nebulasWrath, solarisAscendant, blackstarSentinel, nightfallOdyssey];
 export const extraShips = [aetherSpear, ironComet];
 
-export function Demo() {
-    starboundEclipse.assignPilot(Alex);
-    horizonBreaker.assignPilot(Alina);
-
-    starboundEclipse.info();
-    blackstarSentinel.info();
-
-    const cargo1 = new Cargo("Relics", 40 ,500);
-    const cargo2 = new Cargo("Containers", 30 ,300);
-    const cargo3 = new Cargo("Mails", 50 ,200);
-    const cargo4 = new Cargo("Lights", 200 ,800);
-
-    cargo1.info();
-    cargo2.info();
-    cargo3.info();
-    cargo4.info();
-
-    const missionAlpha = new Mission("Alpha", starboundEclipse, "victoria");
-    MissionControl.registerMission(missionAlpha);
-    missionAlpha.addCargo(cargo1);
-    missionAlpha.addCargo(cargo2);
-    missionAlpha.addCargo(cargo3);
-    missionAlpha.addCargo(cargo4);
-    // const logAlpha = missionAlpha.logStatus.bind(missionAlpha, "[DEBUG]");
-    // logAlpha();
-    //
-    // MissionControl.genericLog.call(pilotA, "[Pilot]");
-    // MissionControl.genericLog.apply(missionAlpha, ["[<MISSION>]"]);
-    MissionControl.launchWithDisplay(missionAlpha, 500);
-}
+const relics = new Cargo("Relics", 40, 300);
+const containers = new Cargo("Containers", 30, 200);
+const mails = new Cargo("Mails", 50, 400);
+const boxes = new Cargo("Mails", 80, 500);
+const lights = new Cargo("Lights", 200, 1200);
+const bugs = new Cargo("Bugs", 999, 0);
+export const cargos = [relics, containers, mails, boxes, lights, bugs];

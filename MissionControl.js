@@ -1,4 +1,4 @@
-export class MissionControl {
+ export class MissionControl {
     static missions = [];
 
     static registerMission(mission) {

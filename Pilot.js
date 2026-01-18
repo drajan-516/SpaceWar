@@ -1,4 +1,4 @@
-import {BaseEntity} from "./BaseEntity.js";
+ import {BaseEntity} from "./BaseEntity.js";
 
 export class Pilot extends BaseEntity {
     #rating = 1;
@@ -6,6 +6,17 @@ export class Pilot extends BaseEntity {
     constructor(name, experienceYears) {
         super(name);
         this.experienceYears = experienceYears;
+        this.energy = 100;
+    }
+
+    attack(target, container) {
+        const attackDamage = Math.floor(Math.random()*(20 - 4) + 5);
+        target.energy -= attackDamage;
+        container.textContent += `\n${this.name} Dealt ${attackDamage} to ${target.name}. ${target.name}'s remaining energy: ${target.energy}`;
+    }
+
+    get type() {
+        return "Pilot";
     }
 
     get rating() {
